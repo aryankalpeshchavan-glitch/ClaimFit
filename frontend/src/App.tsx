@@ -68,7 +68,7 @@ export default function App() {
       <header className="top">
         <div className="brand">
           <svg className="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#14213D" /><path d="M8 16h6m4 0h6" stroke="#FBF8F1" strokeWidth="2.4" strokeLinecap="round" /><circle cx="16" cy="16" r="3.2" fill="#2F7F79" /></svg>
-          <div><div className="brand-name">ScopeLock</div></div>
+          <div><div className="brand-name">ClaimFit</div></div>
         </div>
         <div className={`mode ${mode}`} role="status" aria-live="polite">
           <i aria-hidden="true" />
@@ -80,7 +80,7 @@ export default function App() {
 
       <section className="lede">
         <h1>Does the wording stay inside the evidence?</h1>
-        <p>Paste a marketing claim and the evidence behind it. ScopeLock compares seven dimensions, shows the exact words each finding rests on, and sends anything unclear to a person. It checks your supplied evidence only; it cannot tell you a claim is true.</p>
+        <p>Paste a marketing claim and the evidence behind it. ClaimFit compares seven dimensions, shows the exact words each finding rests on, and sends anything unclear to a person. It checks your supplied evidence only; it cannot tell you a claim is true.</p>
       </section>
 
       <div id="workspace"><Workspace claim={claim} evidence={evidence} setClaim={setClaim} setEvidence={setEvidence} limits={limits} examples={examples}
@@ -127,7 +127,7 @@ export default function App() {
       )}
 
       <footer>
-        ScopeLock is a rule-based checker with optional model assistance. It does not browse, fetch sources or judge whether the evidence itself is reliable, and it supports English text only.
+        ClaimFit is a rule-based checker with optional model assistance. It does not browse, fetch sources or judge whether the evidence itself is reliable, and it supports English text only.
         Example scenarios are illustrative and are not a benchmark. No accuracy figure is claimed.
       </footer>
     </div>
