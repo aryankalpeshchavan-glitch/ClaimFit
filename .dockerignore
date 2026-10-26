@@ -1,0 +1,6 @@
+frontend/node_modules
+app/web
+**/__pycache__
+.pytest_cache
+*.db
+.env

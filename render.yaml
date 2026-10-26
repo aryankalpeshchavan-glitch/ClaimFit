@@ -1,0 +1,13 @@
+# Render blueprint (one web service). Not deployed from this session; verify after you deploy.
+# Build: the Dockerfile compiles the React app (stage 1) and serves it from FastAPI (stage 2).
+services:
+  - type: web
+    name: scopelock
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false        # optional: leave unset to run on the rule-based extractor
+      - key: SCOPELOCK_MODEL
+        value: claude-sonnet-5-5

@@ -1,0 +1,11 @@
+# Round 2 checklist (deadline 28 Oct 2026, 10:00 IST)
+- [ ] Deploy (Render/other) and open the public URL yourself; paste the real URL into the submission. None exists yet.
+- [ ] Run the live URL through docs/QA_SCENARIOS.md on desktop and phone.
+- [ ] Decide on the model key: with a key, run the 6 examples once and note any differences; without, state "rule-based extractor" honestly.
+- [ ] Repository pushed; README setup works from a clean clone (`pip install -r requirements.txt && (cd frontend && npm ci && npm run build) && pytest -q`).
+- [ ] Demo video/screenshots recorded from the deployed app, not from localhost.
+- [ ] Submission text lists only verified features (see README "Known limits").
+- [ ] No benchmark numbers or "outperforms" claims anywhere.
+- [ ] Team names, contact and institution placeholders filled.
+- [ ] Replace docs/screenshot_*.png with captures of the deployed app if you want deployed-URL evidence (current ones are from localhost).
+- [ ] Confirm the Docker build on a machine with Docker (not run in the build session).
