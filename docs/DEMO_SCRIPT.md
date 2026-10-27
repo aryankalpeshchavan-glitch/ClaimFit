@@ -1,5 +1,5 @@
 # 3-minute demo script
-1. (20s) "A real source can still be stretched. ScopeLock checks the wording, not the source link."
+1. (20s) "A real source can still be stretched. ClaimFit checks the wording, not the source link."
 2. (40s) Load "Critical example", Check. Point to 40% vs 30%, "every business", dropped 30-day and Pro qualifiers. "It never approves this draft."
 3. (30s) Click a finding to show the exact highlighted spans. "Every finding traces to quoted text; quotes are verified against the original."
 4. (40s) Suggest rewrite. "The rewrite is built from the evidence's own words and then goes through the same checker."

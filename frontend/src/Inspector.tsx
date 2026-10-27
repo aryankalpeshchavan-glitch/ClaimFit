@@ -18,12 +18,28 @@ function Doc({ text, marks, pane, selected, onSelect, docRef }: {
   return (
     <div ref={docRef} className={`doc${selected ? " has-sel" : ""}`} data-pane={pane} tabIndex={0} aria-label={pane === "claim" ? "Draft claim text with highlights" : "Evidence text with highlights"}>
       {segs.map((s, i) => {
-        if (!s.ids.length) return <Fragment key={i}>{s.text}</Fragment>;   // plain text node: React escapes it, no HTML is built
+        if (!s.ids.length) return <Fragment key={i}>{s.text}</Fragment>;
         const isSel = selected !== null && s.ids.includes(selected);
         const primary = isSel ? (selected as string) : s.ids[0];
         return (
-          <mark key={i} data-ids={s.ids.join(" ")} className={`${tone.get(primary) ?? "warn"}${isSel ? " sel" : ""}`}
-            onClick={() => onSelect(isSel ? null : primary)} title="Click to focus this finding">{s.text}</mark>
+          <mark
+            key={i}
+            data-ids={s.ids.join(" ")}
+            className={`${tone.get(primary) ?? "warn"}${isSel ? " sel" : ""}`}
+            onClick={() => onSelect(isSel ? null : primary)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onSelect(isSel ? null : primary);
+              }
+            }}
+            tabIndex={0}
+            role="button"
+            aria-pressed={isSel}
+            title={isSel ? "Currently selected finding. Click or press Enter to clear." : "Click or press Enter to focus this finding"}
+          >
+            {s.text}
+          </mark>
         );
       })}
     </div>
@@ -56,9 +72,14 @@ export function Inspector({ claim, evidence, comparisons, risks, selected, onSel
     if (!a || !b || !pa || !pb) return setThread(null);
     const W = w.getBoundingClientRect(), A = a.getBoundingClientRect(), B = b.getBoundingClientRect(), PA = pa.getBoundingClientRect(), PB = pb.getBoundingClientRect();
     if (PB.left < PA.right - 4) return setThread(null);                         // stacked (mobile) layout: no thread
-    const inside = (r: DOMRect, p: DOMRect) => r.bottom > p.top && r.top < p.bottom;
+    const inside = (r: DOMRect, p: DOMRect) => r.bottom > p.top + 2 && r.top < p.bottom - 2;
     if (!inside(A, PA) || !inside(B, PB)) return setThread(null);                // target scrolled out of its pane
-    const x1 = PA.right - W.left, y1 = A.top + A.height / 2 - W.top, x2 = PB.left - W.left, y2 = B.top + B.height / 2 - W.top;   // anchored at the pane edges, level with each highlight
+
+    const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
+    const x1 = clamp(PA.right - W.left, 0, W.width);
+    const y1 = clamp(A.top + A.height / 2 - W.top, 0, W.height);
+    const x2 = clamp(PB.left - W.left, 0, W.width);
+    const y2 = clamp(B.top + B.height / 2 - W.top, 0, W.height);
     const mx = (x1 + x2) / 2;
     setThread({ d: `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`, x1, y1, x2, y2 });
   }, [selected, claim, evidence, comparisons, risks]);
@@ -71,18 +92,33 @@ export function Inspector({ claim, evidence, comparisons, risks, selected, onSel
     };
     center(claimRef.current); center(evRef.current);
     layout();
+
+    const raf = requestAnimationFrame(layout);
     const t = window.setTimeout(layout, 380);                                     // after smooth scroll settles
-    const ro = new ResizeObserver(layout);
+    const ro = new ResizeObserver(() => { layout(); });
     if (wrap.current) ro.observe(wrap.current);
-    [claimRef.current, evRef.current].forEach((p) => p?.addEventListener("scroll", layout, { passive: true }));
+    if (claimRef.current) ro.observe(claimRef.current);
+    if (evRef.current) ro.observe(evRef.current);
+
+    const onScroll = () => layout();
+    [claimRef.current, evRef.current].forEach((p) => p?.addEventListener("scroll", onScroll, { passive: true }));
     window.addEventListener("resize", layout);
-    return () => { clearTimeout(t); ro.disconnect(); window.removeEventListener("resize", layout); [claimRef.current, evRef.current].forEach((p) => p?.removeEventListener("scroll", layout)); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(t);
+      ro.disconnect();
+      window.removeEventListener("resize", layout);
+      window.removeEventListener("scroll", onScroll);
+      [claimRef.current, evRef.current].forEach((p) => p?.removeEventListener("scroll", onScroll));
+    };
   }, [selected, layout]);
 
   return (
     <div className="panel">
       <div className="inspector" ref={wrap}>
-        <svg className="thread" aria-hidden="true">
+        <svg className="thread" width="100%" height="100%" aria-hidden="true">
           {thread && <g key={`${selected}-${thread.d}`}><path d={thread.d} /><circle cx={thread.x1} cy={thread.y1} r="4" /><circle cx={thread.x2} cy={thread.y2} r="4" /></g>}
         </svg>
         <div className="pane"><h3>Draft claim <span>{claim.length} characters</span></h3>

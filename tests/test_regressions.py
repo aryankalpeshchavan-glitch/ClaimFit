@@ -60,3 +60,49 @@ def test_rewrite_refuses_ambiguous_or_negated_evidence():
     X = HeuristicExtractor()
     assert build_template(X.extract(EVIDENCE + " Support tickets fell by 12%.", "evidence")) is None
     assert build_template(X.extract(BASE + "median setup time did not fall by 30%.", "evidence")) is None
+
+def test_causal_claim_flags_language_risk_not_contradiction():
+    from app.language.risk import analyze_language
+    from app.rules.engine import decide
+    claim = BASE + "median setup time fell by 30% because of our platform."
+    risks = analyze_language(claim, EVIDENCE)
+    causal_risks = [r for r in risks if r.category == "CAUSAL"]
+    assert len(causal_risks) >= 1
+    assert causal_risks[0].severity == "review"
+    # Dimensions themselves should not be marked contradicted due to language risk alone
+    by, _ = run(claim)
+    assert codes(by)["value"][0] == "supported"
+    assert all(c.status.value != "contradicted" for c in by.values())
+    # When language_risks is supplied to decide, approval is withheld without contradiction
+    v = decide(list(by.values()), language_risks=risks)
+    assert v.status.value == "NEEDS_HUMAN_REVIEW"
+    assert v.counts["contradicted"] == 0
+    assert "LANGUAGE_RISK_UNRESOLVED" in v.abstain_reasons
+
+def test_terminology_change_is_not_manufactured_as_factual_contradiction():
+    from app.language.risk import analyze_language
+    claim = "In a 30-day test of 120 small-business clients using Pro, median setup time fell by 30%."
+    risks = analyze_language(claim, EVIDENCE)
+    term_risks = [r for r in risks if r.category == "TERMINOLOGY_CHANGE"]
+    assert len(term_risks) >= 1
+    by, v = run(claim)
+    # The dimension is unknown (review), never contradicted
+    assert codes(by)["population"][0] in ("unknown", "supported")
+    assert codes(by)["population"][0] != "contradicted"
+
+def test_evidence_qualifier_dropped_flags_missing_limitation():
+    from app.language.risk import analyze_language
+    ev = "In a preliminary pilot test of 120 small-business customers using Pro, median setup time fell by 30%."
+    claim = "In a test of 120 small-business customers using Pro, median setup time fell by 30%."
+    risks = analyze_language(claim, ev)
+    missing = [r for r in risks if r.category == "MISSING_QUALIFIER"]
+    assert len(missing) >= 1
+    assert missing[0].severity == "review"
+
+def test_matching_evidence_words_suppress_false_positive_risks():
+    from app.language.risk import analyze_language
+    ev = "Our tool guarantees that in a 30-day test of 120 small-business customers using Pro, median setup time fell by 30%."
+    claim = "Our tool guarantees that in a 30-day test of 120 small-business customers using Pro, median setup time fell by 30%."
+    risks = analyze_language(claim, ev)
+    # "guarantees" appears in the evidence, so it is covered by the source
+    assert not any(r.category == "GUARANTEE" and r.title == "Guarantee-like wording" for r in risks)

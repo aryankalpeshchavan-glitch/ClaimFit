@@ -29,22 +29,22 @@ h1, h2, h3, p { margin: 0; }
 .top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0 8px; flex-wrap: wrap; }
 .brand { display: flex; align-items: center; gap: 12px; }
 .brand-mark { width: 34px; height: 34px; }
-.brand-name { font: 600 22px/1 var(--serif); letter-spacing: -.01em; }
+.brand-name { font: 600 22px/1.2 var(--serif); letter-spacing: -.01em; padding-left: 1px; }
 .brand-sub { color: var(--ink-3); font-size: 14px; max-width: 46ch; }
-.mode { display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border: 1px solid var(--rule-strong); border-radius: 999px; background: var(--paper); font-size: 14px; box-shadow: var(--shadow-1); }
+.mode { display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border: 1px solid var(--rule-strong); border-radius: 999px; background: var(--paper); font-size: 13.5px; box-shadow: var(--shadow-1); max-width: 100%; flex-wrap: wrap; }
 .mode i { width: 9px; height: 9px; border-radius: 50%; background: var(--ink-3); flex: none; }
 .mode.llm i { background: var(--ok); } .mode.rules i { background: var(--warn); }
 .mode small { color: var(--ink-3); font-size: 13px; }
 
 .lede { padding: 36px 0 28px; max-width: 760px; }
-.lede h1 { font: 560 clamp(32px, 5vw, 50px)/1.08 var(--serif); letter-spacing: -.02em; font-variation-settings: "opsz" 96; }
-.lede p { margin-top: 14px; color: var(--ink-2); font-size: 18px; max-width: 62ch; }
+.lede h1 { font: 560 clamp(30px, 4.8vw, 48px)/1.15 var(--serif); letter-spacing: -.015em; font-variation-settings: "opsz" 96; padding-left: 1px; }
+.lede p { margin-top: 14px; color: var(--ink-2); font-size: 17.5px; max-width: 62ch; line-height: 1.6; }
 
 /* ---------- panels ---------- */
 .panel { background: var(--paper); border: 1px solid var(--rule); border-radius: var(--r-lg); box-shadow: var(--shadow-1); }
-.section { margin-top: 28px; }
+.section { margin-top: 32px; }
 .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
-.section-head h2 { font: 600 24px/1.2 var(--serif); letter-spacing: -.01em; }
+.section-head h2 { font: 600 24px/1.3 var(--serif); letter-spacing: -.01em; padding-left: 1px; }
 .section-head p { color: var(--ink-3); font-size: 15px; max-width: 64ch; }
 
 /* ---------- workspace ---------- */
@@ -98,42 +98,46 @@ h1, h2, h3, p { margin: 0; }
 .verdict.ok { border-left-color: var(--ok); background: linear-gradient(90deg, var(--ok-bg), var(--paper) 55%); }
 .verdict.bad { border-left-color: var(--bad); background: linear-gradient(90deg, var(--bad-bg), var(--paper) 55%); }
 .verdict.warn { border-left-color: var(--warn); background: linear-gradient(90deg, var(--warn-bg), var(--paper) 55%); }
-.verdict h2 { font: 600 clamp(26px, 3.6vw, 36px)/1.12 var(--serif); letter-spacing: -.015em; }
+.verdict h2 { font: 600 clamp(24px, 3.5vw, 34px)/1.2 var(--serif); letter-spacing: -.015em; padding-left: 1px; }
 .verdict.ok h2 { color: var(--ok-ink); } .verdict.bad h2 { color: var(--bad-ink); } .verdict.warn h2 { color: var(--warn-ink); }
 .verdict .sum { margin-top: 8px; color: var(--ink-2); max-width: 70ch; }
 .verdict .scope { margin-top: 10px; font-size: 14px; color: var(--ink-3); }
 .why { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
 .why li { display: flex; gap: 10px; align-items: baseline; font-size: 15.5px; }
-.why li b { font-weight: 650; white-space: nowrap; }
+.why li b { font-weight: 650; }
 .why .ic { flex: none; transform: translateY(3px); }
 .rail { display: grid; grid-template-columns: repeat(7, 28px); gap: 8px; align-content: start; justify-items: center; }
-@media (max-width: 760px) { .rail { grid-template-columns: repeat(7, 1fr); width: 100%; } }
-.rail button { width: 28px; height: 28px; border-radius: 50%; border: 2px solid; display: grid; place-items: center; cursor: pointer; padding: 0; background: var(--paper); transition: transform .12s; animation: pop .35s cubic-bezier(.2,.8,.3,1.3) both; animation-delay: calc(var(--i) * 70ms + 200ms); }
-.rail button:hover { transform: scale(1.12); }
+@media (max-width: 760px) { .rail { grid-template-columns: repeat(7, 1fr); width: 100%; max-width: 280px; } }
+.rail button { width: 28px; height: 28px; border-radius: 50%; border: 2px solid; display: grid; place-items: center; cursor: pointer; padding: 0; background: var(--paper); transition: transform .12s, box-shadow .12s; animation: pop .35s cubic-bezier(.2,.8,.3,1.3) both; animation-delay: calc(var(--i) * 70ms + 200ms); }
+.rail button:hover { transform: scale(1.12); box-shadow: var(--shadow-1); }
 .rail button.ok { border-color: var(--ok); color: var(--ok); } .rail button.bad { border-color: var(--bad); color: var(--bad); background: var(--bad-bg); } .rail button.warn { border-color: var(--warn); color: var(--warn-ink); background: var(--warn-bg); }
 .rail-cap { grid-column: 1 / -1; font-size: 13px; color: var(--ink-3); text-align: center; margin-top: 4px; }
 .meta-line { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--ink-3); font-size: 13.5px; }
 
 /* ---------- inspector ---------- */
-.inspector { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; padding: 18px; }
-@media (max-width: 860px) { .inspector { grid-template-columns: 1fr; gap: 16px; } }
-.pane { min-width: 0; display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 1; }
-.pane h3 { font-size: 15px; font-weight: 650; display: flex; justify-content: space-between; gap: 8px; }
+.inspector { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; padding: 20px 22px; overflow: hidden; }
+@media (max-width: 860px) { .inspector { grid-template-columns: 1fr; gap: 18px; padding: 16px; } }
+.pane { min-width: 0; display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 1; }
+.pane h3 { font-size: 15px; font-weight: 650; line-height: 1.4; display: flex; justify-content: space-between; gap: 8px; padding-left: 1px; }
 .pane h3 span { font-weight: 400; color: var(--ink-3); }
 .doc { border: 1px solid var(--rule); border-radius: var(--r-md); background: #fff; padding: 14px 16px; max-height: 340px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.75; font-size: 16px; scroll-behavior: smooth; }
-.doc mark { background: transparent; color: inherit; border-radius: 4px; padding: 1px 0; cursor: pointer; transition: background .2s, box-shadow .2s, opacity .2s; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
-.doc mark.ok { background: rgba(47,127,121,.14); box-shadow: inset 0 -2px 0 rgba(47,127,121,.55); }
-.doc mark.bad { background: rgba(180,68,63,.13); box-shadow: inset 0 -2px 0 rgba(180,68,63,.6); }
-.doc mark.warn { background: rgba(169,112,26,.15); box-shadow: inset 0 -2px 0 rgba(169,112,26,.6); }
-.doc mark.lr { background: rgba(169,112,26,.08); box-shadow: inset 0 -2px 0 rgba(169,112,26,.5); border-bottom: 0; text-decoration: underline dashed rgba(169,112,26,.8) 1.5px; text-underline-offset: 4px; }
-.doc.has-sel mark:not(.sel) { background: transparent; box-shadow: none; text-decoration: none; }   /* dim the marking, never the text */
-.doc mark.sel { opacity: 1; outline: 2px solid var(--ink); outline-offset: 1px; }
-.doc mark.sel.ok { background: rgba(47,127,121,.32); } .doc mark.sel.bad { background: rgba(180,68,63,.3); } .doc mark.sel.warn, .doc mark.sel.lr { background: rgba(169,112,26,.34); }
-.thread { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: visible; }
-.thread path { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 600; stroke-dashoffset: 600; animation: draw .6s ease forwards; }
+.doc:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.doc mark { background: transparent; color: inherit; border-radius: 4px; padding: 1px 2px; cursor: pointer; transition: background .18s ease, box-shadow .18s ease, outline .18s ease; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.doc mark:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.doc mark.ok { background: rgba(47,127,121,.15); box-shadow: inset 0 -2px 0 rgba(47,127,121,.6); }
+.doc mark.bad { background: rgba(180,68,63,.14); box-shadow: inset 0 -2px 0 rgba(180,68,63,.65); }
+.doc mark.warn { background: rgba(169,112,26,.16); box-shadow: inset 0 -2px 0 rgba(169,112,26,.65); }
+.doc mark.lr { background: rgba(169,112,26,.09); box-shadow: inset 0 -2px 0 rgba(169,112,26,.55); border-bottom: 0; text-decoration: underline dashed rgba(169,112,26,.85) 1.5px; text-underline-offset: 4px; }
+.doc.has-sel mark:not(.sel) { background: transparent; box-shadow: none; text-decoration: none; opacity: .75; }
+.doc mark.sel { opacity: 1; outline: 2px solid var(--ink); outline-offset: 1px; font-weight: 500; }
+.doc mark.sel.ok { background: rgba(47,127,121,.34); box-shadow: inset 0 -2px 0 var(--ok); }
+.doc mark.sel.bad { background: rgba(180,68,63,.32); box-shadow: inset 0 -2px 0 var(--bad); }
+.doc mark.sel.warn, .doc mark.sel.lr { background: rgba(169,112,26,.36); box-shadow: inset 0 -2px 0 var(--warn); }
+.thread { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+.thread path { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 600; stroke-dashoffset: 600; animation: draw .55s cubic-bezier(.2,.8,.2,1) forwards; filter: drop-shadow(0 1px 1px rgba(20,33,61,.15)); }
 .thread circle { fill: var(--ink); }
-.insp-hint { padding: 0 18px 16px; color: var(--ink-3); font-size: 14px; }
-.legend { display: flex; gap: 16px; flex-wrap: wrap; padding: 0 18px 14px; font-size: 13.5px; color: var(--ink-2); }
+.insp-hint { padding: 0 20px 16px; color: var(--ink-3); font-size: 14px; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; padding: 0 20px 14px; font-size: 13.5px; color: var(--ink-2); }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { width: 16px; height: 8px; border-radius: 3px; display: inline-block; }
 

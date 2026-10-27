@@ -68,7 +68,7 @@ export function RewritePanel({ review, draft, setDraft, result, verifiedText, bu
 
       {result && result.text === null && (
         <div className="result-box warn"><div className="result-head"><Icon tone="warn" size={16} />No safe rewrite could be built</div>
-          <div className="result-body"><p>{result.notes[0]}</p><p><b>Next step:</b> ask a person to write the wording, or supply evidence that states one metric, number, unit and direction clearly. ScopeLock will not invent evidence.</p></div></div>
+          <div className="result-body"><p>{result.notes[0]}</p><p><b>Next step:</b> ask a person to write the wording, or supply evidence that states one metric, number, unit and direction clearly. ClaimFit will not invent evidence.</p></div></div>
       )}
 
       {stale && <div className="note-panel">The wording changed since the last check. Select “Re-verify this wording” — the earlier result no longer applies to this text.</div>}

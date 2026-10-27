@@ -2,7 +2,7 @@
 # Build: the Dockerfile compiles the React app (stage 1) and serves it from FastAPI (stage 2).
 services:
   - type: web
-    name: scopelock
+    name: claimfit
     runtime: docker
     plan: free
     healthCheckPath: /api/health

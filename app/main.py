@@ -53,7 +53,7 @@ def build_service_from_env() -> ReviewService:
 def create_app(service: Optional[ReviewService] = None, rate_limit: Optional[int] = None) -> FastAPI:
     svc = service or build_service_from_env()
     limiter = RateLimiter(rate_limit if rate_limit is not None else int(os.getenv("SCOPELOCK_RATE_LIMIT_PER_MIN", "40")))
-    app = FastAPI(title="ScopeLock", version="0.3.0")
+    app = FastAPI(title="ClaimFit", version="0.3.0")
 
     def err(status, code, message):
         return JSONResponse(status_code=status, content={"error": {"code": code, "message": message}})
@@ -151,7 +151,7 @@ def create_app(service: Optional[ReviewService] = None, rate_limit: Optional[int
         @app.get("/", include_in_schema=False)
         def index_missing():
             # Deliberately NOT a silent fallback to an old page: say plainly that the frontend was not built.
-            return HTMLResponse("<h1>ScopeLock API is running</h1><p>The web interface has not been built. "
+            return HTMLResponse("<h1>ClaimFit API is running</h1><p>The web interface has not been built. "
                                 "Run <code>cd frontend &amp;&amp; npm ci &amp;&amp; npm run build</code>, or use the Docker image. "
                                 "The API is available under <code>/api</code>.</p>", status_code=503)
 

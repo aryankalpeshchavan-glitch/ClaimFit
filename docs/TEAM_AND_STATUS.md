@@ -1,7 +1,7 @@
-# Ownership and honest status
-| Owner | Files | Status |
+# ClaimFit — Ownership and Honest Status
+
+| Owner | Primary Components | Status |
 |---|---|---|
-| Aryan | app/main.py, app/service.py, app/extraction/llm.py, frontend/ (React UI), Dockerfile, render.yaml | built and browser-tested locally; deployment NOT yet done |
-| Anjishnu | app/rules/engine.py, app/extraction/parsers.py, app/language/risk.py, tests/test_rules.py, tests/test_extraction.py, tests/test_regressions.py, tests/test_language_risk.py | rules-1.1 with regression tests; needs human review and more edge cases |
-| Ananya | README.md, docs/QA_SCENARIOS.md, UI usability review, submission text | drafts written from verified behaviour; needs manual QA pass |
-(Assignments follow the Round 2 brief. Code in this repo was written in one AI-assisted session; each owner should read and own their files.)
+| **Aryan** | `app/main.py`, `app/service.py`, `app/extraction/llm.py`, `frontend/` (React UI, SVG Thread, CSS), `Dockerfile`, `render.yaml` | Built, layout bugs resolved, and tested across viewports (360px–1440px) locally; Docker CLI inspected (daemon was inactive); live public deployment not yet performed. |
+| **Anjishnu** | `app/rules/engine.py`, `app/extraction/parsers.py`, `app/language/risk.py`, `tests/` | Deterministic engine verified; 94 backend tests passing; regression suite expanded to cover edge cases, language-risk separation, and dropped qualifiers. |
+| **Ananya** | `README.md`, `docs/DEMO_SCRIPT.md`, `docs/QA_SCENARIOS.md`, UI manual QA pass | Documentation completely updated for ClaimFit; script, checklist, and test scenarios aligned with verified implementation. |

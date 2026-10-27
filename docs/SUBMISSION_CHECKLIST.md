@@ -1,11 +1,11 @@
-# Round 2 checklist (deadline 28 Oct 2026, 10:00 IST)
-- [ ] Deploy (Render/other) and open the public URL yourself; paste the real URL into the submission. None exists yet.
-- [ ] Run the live URL through docs/QA_SCENARIOS.md on desktop and phone.
-- [ ] Decide on the model key: with a key, run the 6 examples once and note any differences; without, state "rule-based extractor" honestly.
-- [ ] Repository pushed; README setup works from a clean clone (`pip install -r requirements.txt && (cd frontend && npm ci && npm run build) && pytest -q`).
-- [ ] Demo video/screenshots recorded from the deployed app, not from localhost.
-- [ ] Submission text lists only verified features (see README "Known limits").
-- [ ] No benchmark numbers or "outperforms" claims anywhere.
-- [ ] Team names, contact and institution placeholders filled.
-- [ ] Replace docs/screenshot_*.png with captures of the deployed app if you want deployed-URL evidence (current ones are from localhost).
-- [ ] Confirm the Docker build on a machine with Docker (not run in the build session).
+# ClaimFit Submission Checklist
+
+- [ ] Deploy (Render or alternate host) and verify the public URL manually. (Currently verified on local server only).
+- [ ] Run the live URL through `docs/QA_SCENARIOS.md` on desktop and mobile.
+- [ ] Decide on the Anthropic model key: with a key, run the examples; without, state "rule-based extractor" honestly.
+- [ ] Repository pushed: verify that a clean clone runs tests (`pytest -q`, `npm test`, `python tests/e2e/test_ui.py`).
+- [ ] Demo video / screenshots: captures are saved in `docs/screenshot_desktop.png` and `docs/screenshot_mobile.png`.
+- [ ] Submission text reflects only verified features (see README "Known Limitations").
+- [ ] No fake benchmarks, accuracy statistics, or exaggerated claims.
+- [ ] Team names, contact, and ownership details completed.
+- [ ] Confirm Docker build on an environment where the Docker daemon is active (Docker CLI version 29.7.2 confirmed present).
