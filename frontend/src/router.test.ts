@@ -28,6 +28,19 @@ describe("router parseRoute", () => {
     expect(r.exampleId).toBe("critical");
   });
 
+  it("matches examples path", () => {
+    const r = parseRoute("/examples");
+    expect(r.name).toBe("examples");
+    expect(r.notFound).toBeFalsy();
+    expect(r.exampleId).toBeUndefined();
+  });
+
+  it("matches examples path with example param", () => {
+    const r = parseRoute("/examples?example=critical");
+    expect(r.name).toBe("examples");
+    expect(r.exampleId).toBe("critical");
+  });
+
   it("matches saved review path /r/:id", () => {
     const r = parseRoute("/r/demo-critical");
     expect(r.name).toBe("review");

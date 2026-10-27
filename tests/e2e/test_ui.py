@@ -45,7 +45,7 @@ def main() -> int:
         pg_land.wait_for_selector(".hero-h1")
 
         h1_text = pg_land.inner_text("h1")
-        check("landing h1 contains outgrow their evidence", "outgrow their evidence" in h1_text.lower())
+        check("landing h1 contains evidence headline", "inside the evidence" in h1_text.lower() or "outgrow their evidence" in h1_text.lower())
 
         # Trigger scroll reveal across sections before taking full page screenshot
         pg_land.evaluate("""async () => {
@@ -65,15 +65,53 @@ def main() -> int:
         pg_land.wait_for_selector(".scenarios")
         check("Check a claim button navigates to /check and shows .scenarios", pg_land.locator(".scenarios").count() > 0)
 
+        # "Browse 15 Scenarios" or nav link navigates to /examples
+        pg_land.goto(BASE_URL)
+        pg_land.wait_for_selector(".hero-h1")
+        pg_land.click(".shell-nav-links a:has-text('Examples')")
+        pg_land.wait_for_selector(".examples-grid")
+        check("Examples nav link reaches /examples and shows examples grid", pg_land.locator(".example-card").count() >= 10)
+
+        # Category filter test on /examples
+        pg_land.click(".cat-pill:has-text('Statistics & Units')")
+        pg_land.wait_for_timeout(200)
+        stat_cards = pg_land.locator(".example-card").count()
+        check("Category filter updates displayed cards", stat_cards > 0 and stat_cards < 15)
+
+        # Search test on /examples
+        pg_land.fill(".examples-search-input", "median")
+        pg_land.wait_for_timeout(200)
+        search_cards = pg_land.locator(".example-card").count()
+        check("Search filters example cards by query", search_cards > 0)
+
+        # Clear search and reset category
+        pg_land.click(".search-clear-btn")
+        pg_land.click(".cat-pill:has-text('All Scenarios')")
+        pg_land.wait_for_timeout(200)
+
+        # Screenshot desktop examples
+        pg_land.screenshot(path=str(SCREENSHOTS_DIR / "desktop_examples.png"), full_page=True)
+
+        # "Try this in Checker" loads into /check with populated claim
+        first_card_cta = pg_land.locator(".example-open-cta >> nth=0")
+        first_card_cta.click()
+        pg_land.wait_for_selector("#claim")
+        claim_val = pg_land.input_value("#claim")
+        check("Try this in Checker loads claim into workspace textarea", len(claim_val) > 0)
+
+        # Clear text button test
+        pg_land.click(".field.claim .btn-clear-text")
+        check("Clear text button clears claim input", pg_land.input_value("#claim") == "")
+
         # "See a live example" check
         pg_land.goto(BASE_URL)
         pg_land.wait_for_selector(".hero-h1")
-        pg_land.click("text=See a live example")
+        pg_land.click(".hero-demo-run-cta")
         pg_land.wait_for_selector(".scenarios")
         if pg_land.locator(".verdict").count() == 0:
             pg_land.click("text=Check claim")
             pg_land.wait_for_selector(".verdict")
-        check("See a live example ends on a verdict", pg_land.locator(".verdict").count() > 0)
+        check("Run in live checker ends on a verdict", pg_land.locator(".verdict").count() > 0)
         pg_land.close()
 
         # -------------------------------------------------------------
@@ -108,6 +146,12 @@ def main() -> int:
         }""")
         pg_mob.wait_for_timeout(300)
         pg_mob.screenshot(path=str(SCREENSHOTS_DIR / "mobile_landing.png"), full_page=True)
+
+        # Mobile examples view check
+        pg_mob.goto(BASE_URL + "examples")
+        pg_mob.wait_for_selector(".examples-grid")
+        pg_mob.wait_for_timeout(300)
+        pg_mob.screenshot(path=str(SCREENSHOTS_DIR / "mobile_examples.png"), full_page=True)
         pg_mob.close()
 
         # -------------------------------------------------------------

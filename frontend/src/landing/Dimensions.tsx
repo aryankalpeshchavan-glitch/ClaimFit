@@ -40,7 +40,7 @@ export function Dimensions() {
   };
 
   return (
-    <section className="section dimensions-section" aria-labelledby="dim-explorer-h">
+    <section id="dimensions" className="section dimensions-section" aria-labelledby="dim-explorer-h">
       <div className="section-head">
         <h2 id="dim-explorer-h">{LANDING_COPY.dimensions.title}</h2>
         <p>{LANDING_COPY.dimensions.subtitle}</p>

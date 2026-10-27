@@ -16,7 +16,7 @@ export interface FaqItem {
 
 export const LANDING_COPY = {
   hero: {
-    headline: "Catch claims that outgrow their evidence before you publish.",
+    headline: "Keep every claim inside the evidence.",
     sub: "Paste a marketing claim and the evidence behind it. ClaimFit compares seven dimensions, shows the exact words each finding rests on, and sends anything unclear to a person.",
     ctaPrimary: "Check a claim",
     ctaSecondary: "See a live example",

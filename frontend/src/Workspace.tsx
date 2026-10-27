@@ -33,16 +33,44 @@ export function Workspace(p: Props) {
           <p className="hint" id="claim-h">The sentence you want to publish.</p>
           <textarea id="claim" value={p.claim} onChange={(e) => p.setClaim(e.target.value)} aria-describedby="claim-h claim-f" aria-invalid={!!cErr}
             placeholder="Our platform cuts setup time by 40% for every business." />
-          <div className="field-foot" id="claim-f"><span className="err" role={cErr ? "alert" : undefined}>{cErr}</span>
-            <span className={`count${cOver ? " over" : ""}`}>{p.claim.length.toLocaleString()} / {p.limits.claim_chars.toLocaleString()}</span></div>
+          <div className="field-foot" id="claim-f">
+            <span className="err" role={cErr ? "alert" : undefined}>{cErr}</span>
+            <div className="field-meta">
+              {p.claim && (
+                <button
+                  type="button"
+                  className="btn-clear-text"
+                  onClick={() => p.setClaim("")}
+                  aria-label="Clear claim text"
+                >
+                  Clear text
+                </button>
+              )}
+              <span className={`count${cOver ? " over" : ""}`}>{p.claim.length.toLocaleString()} / {p.limits.claim_chars.toLocaleString()}</span>
+            </div>
+          </div>
         </div>
         <div className="field evidence">
           <label htmlFor="evidence">Supporting evidence</label>
           <p className="hint" id="ev-h">Paste the source text. It is treated as data, never as instructions.</p>
           <textarea id="evidence" value={p.evidence} onChange={(e) => p.setEvidence(e.target.value)} aria-describedby="ev-h ev-f" aria-invalid={!!eErr}
             placeholder="In a 30-day test of 120 small-business customers using Pro, median setup time fell by 30%." />
-          <div className="field-foot" id="ev-f"><span className="err" role={eErr ? "alert" : undefined}>{eErr}</span>
-            <span className={`count${eOver ? " over" : ""}`}>{p.evidence.length.toLocaleString()} / {p.limits.evidence_chars.toLocaleString()}</span></div>
+          <div className="field-foot" id="ev-f">
+            <span className="err" role={eErr ? "alert" : undefined}>{eErr}</span>
+            <div className="field-meta">
+              {p.evidence && (
+                <button
+                  type="button"
+                  className="btn-clear-text"
+                  onClick={() => p.setEvidence("")}
+                  aria-label="Clear evidence text"
+                >
+                  Clear text
+                </button>
+              )}
+              <span className={`count${eOver ? " over" : ""}`}>{p.evidence.length.toLocaleString()} / {p.limits.evidence_chars.toLocaleString()}</span>
+            </div>
+          </div>
         </div>
       </div>
       <div className="actions">

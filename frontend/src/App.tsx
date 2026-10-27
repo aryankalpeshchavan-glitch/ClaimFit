@@ -4,6 +4,7 @@ import { useRoute } from "./router";
 import Landing from "./pages/Landing";
 
 const Checker = lazy(() => import("./pages/Checker"));
+const Examples = lazy(() => import("./pages/Examples"));
 
 function CheckerSkeleton() {
   return (
@@ -14,7 +15,7 @@ function CheckerSkeleton() {
             <i key={i} style={{ ["--i" as string]: i }} />
           ))}
         </div>
-        <p>Loading claim checker…</p>
+        <p>Loading…</p>
       </div>
     </div>
   );
@@ -28,6 +29,16 @@ export default function App() {
       <Shell currentRoute={route} hideFooter={true}>
         <Suspense fallback={<CheckerSkeleton />}>
           <Checker exampleId={route.exampleId} reviewId={route.reviewId} />
+        </Suspense>
+      </Shell>
+    );
+  }
+
+  if (route.name === "examples") {
+    return (
+      <Shell currentRoute={route}>
+        <Suspense fallback={<CheckerSkeleton />}>
+          <Examples />
         </Suspense>
       </Shell>
     );

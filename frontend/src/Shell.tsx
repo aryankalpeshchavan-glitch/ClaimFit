@@ -7,6 +7,10 @@ export const prefetchChecker = () => {
   import("./pages/Checker");
 };
 
+export const prefetchExamples = () => {
+  import("./pages/Examples");
+};
+
 interface ShellProps {
   currentRoute: Route;
   children: ReactNode;
@@ -77,15 +81,25 @@ export function Shell({ currentRoute, children, hideFooter }: ShellProps) {
           </Link>
 
           <div className="shell-nav-links desktop-only">
+            <Link
+              href="/"
+              className={currentRoute.name === "landing" ? "active" : ""}
+            >
+              Product
+            </Link>
             <a href="#how-it-works" onClick={(e) => handleNavClick(e, "how-it-works")}>
               How it works
             </a>
-            <a href="#what-it-catches" onClick={(e) => handleNavClick(e, "what-it-catches")}>
-              What it catches
+            <a href="#dimensions" onClick={(e) => handleNavClick(e, "dimensions")}>
+              7 Dimensions
             </a>
-            <a href="#limits" onClick={(e) => handleNavClick(e, "limits")}>
-              Limits
-            </a>
+            <Link
+              href="/examples"
+              className={currentRoute.name === "examples" ? "active" : ""}
+              prefetch={prefetchExamples}
+            >
+              Examples
+            </Link>
             <a href="#faq" onClick={(e) => handleNavClick(e, "faq")}>
               FAQ
             </a>
@@ -122,15 +136,27 @@ export function Shell({ currentRoute, children, hideFooter }: ShellProps) {
         {menuOpen && (
           <div id="mobile-nav-menu" className="mobile-nav-drawer mobile-only">
             <div className="mobile-nav-items">
+              <Link
+                href="/"
+                onClick={() => setMenuOpen(false)}
+                className={currentRoute.name === "landing" ? "active" : ""}
+              >
+                Product
+              </Link>
               <a href="#how-it-works" onClick={(e) => handleNavClick(e, "how-it-works")}>
                 How it works
               </a>
-              <a href="#what-it-catches" onClick={(e) => handleNavClick(e, "what-it-catches")}>
-                What it catches
+              <a href="#dimensions" onClick={(e) => handleNavClick(e, "dimensions")}>
+                7 Dimensions
               </a>
-              <a href="#limits" onClick={(e) => handleNavClick(e, "limits")}>
-                Limits
-              </a>
+              <Link
+                href="/examples"
+                onClick={() => setMenuOpen(false)}
+                className={currentRoute.name === "examples" ? "active" : ""}
+                prefetch={prefetchExamples}
+              >
+                Examples
+              </Link>
               <a href="#faq" onClick={(e) => handleNavClick(e, "faq")}>
                 FAQ
               </a>
@@ -195,13 +221,23 @@ export function Shell({ currentRoute, children, hideFooter }: ShellProps) {
                       </Link>
                     </li>
                     <li>
-                      <a href="#what-it-catches" onClick={(e) => handleNavClick(e, "what-it-catches")}>
-                        Examples
+                      <Link href="/examples" prefetch={prefetchExamples}>
+                        Examples library
+                      </Link>
+                    </li>
+                    <li>
+                      <a href="#how-it-works" onClick={(e) => handleNavClick(e, "how-it-works")}>
+                        How it works
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#dimensions" onClick={(e) => handleNavClick(e, "dimensions")}>
+                        7 Dimensions
                       </a>
                     </li>
                     <li>
                       <a href="#limits" onClick={(e) => handleNavClick(e, "limits")}>
-                        Limits
+                        Limits & boundaries
                       </a>
                     </li>
                   </ul>

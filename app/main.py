@@ -149,6 +149,10 @@ def create_app(service: Optional[ReviewService] = None, rate_limit: Optional[int
         def check_route():
             return FileResponse(web_dir / "index.html")
 
+        @app.get("/examples", include_in_schema=False)
+        def examples_route():
+            return FileResponse(web_dir / "index.html")
+
         @app.get("/r/{review_id}", include_in_schema=False)
         def review_route(review_id: str):
             return FileResponse(web_dir / "index.html")
@@ -159,6 +163,7 @@ def create_app(service: Optional[ReviewService] = None, rate_limit: Optional[int
     else:
         @app.get("/", include_in_schema=False)
         @app.get("/check", include_in_schema=False)
+        @app.get("/examples", include_in_schema=False)
         @app.get("/r/{review_id}", include_in_schema=False)
         def index_missing(review_id: Optional[str] = None):
             # Deliberately NOT a silent fallback to an old page: say plainly that the frontend was not built.

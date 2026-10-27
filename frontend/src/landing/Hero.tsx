@@ -53,9 +53,30 @@ export function Hero() {
                 {LANDING_COPY.hero.ctaPrimary}
               </Link>
             </Magnet>
-            <Link href="/check?example=critical" className="btn hero-secondary-btn" prefetch={prefetchChecker}>
-              {LANDING_COPY.hero.ctaSecondary}
+            <Link href="/examples" className="btn hero-secondary-btn" prefetch={prefetchChecker}>
+              Browse 15 Scenarios
             </Link>
+          </div>
+
+          <div className="hero-trust-strip" aria-label="Core guarantees">
+            <span className="trust-item">
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="M3 8.5l3.5 3.5 6.5-7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              7 Deterministic Dimensions
+            </span>
+            <span className="trust-item">
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="M3 8.5l3.5 3.5 6.5-7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Zero hallucinated metrics
+            </span>
+            <span className="trust-item">
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="M3 8.5l3.5 3.5 6.5-7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Character-accurate Inspector
+            </span>
           </div>
 
           <p className="hero-disclaimer">{LANDING_COPY.hero.quietNote}</p>

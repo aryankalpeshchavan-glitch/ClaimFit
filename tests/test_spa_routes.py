@@ -26,7 +26,12 @@ def test_spa_routes_serve_index_html(tmp_path: Path, monkeypatch: pytest.MonkeyP
     assert r_check.status_code == 200
     assert "ClaimFit Stub" in r_check.text
 
-    # 3. /check?example=critical works
+    # 3. /examples serves the UI
+    r_ex = client.get("/examples")
+    assert r_ex.status_code == 200
+    assert "ClaimFit Stub" in r_ex.text
+
+    # 4. /check?example=critical works
     r_check_param = client.get("/check?example=critical")
     assert r_check_param.status_code == 200
     assert "ClaimFit Stub" in r_check_param.text
@@ -83,6 +88,10 @@ def test_spa_routes_frontend_not_built_503(tmp_path: Path, monkeypatch: pytest.M
     r_check = client.get("/check")
     assert r_check.status_code == 503
     assert "ClaimFit API is running" in r_check.text
+
+    r_ex = client.get("/examples")
+    assert r_ex.status_code == 503
+    assert "ClaimFit API is running" in r_ex.text
 
     r_rev = client.get("/r/abc")
     assert r_rev.status_code == 503

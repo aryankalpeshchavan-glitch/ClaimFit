@@ -2,7 +2,7 @@ import React, { useEffect, useState, type MouseEvent, type ReactNode } from "rea
 import { transitionRoute } from "./motion/viewTransition";
 
 export interface Route {
-  name: "landing" | "checker" | "review";
+  name: "landing" | "checker" | "review" | "examples";
   reviewId?: string;
   exampleId?: string;
   notFound?: boolean;
@@ -19,6 +19,9 @@ export function parseRoute(pathWithQuery: string): Route {
   }
   if (pathname === "/check") {
     return { name: "checker", exampleId, path: pathWithQuery };
+  }
+  if (pathname === "/examples") {
+    return { name: "examples", exampleId, path: pathWithQuery };
   }
   if (pathname.startsWith("/r/")) {
     const id = pathname.slice(3).trim();
