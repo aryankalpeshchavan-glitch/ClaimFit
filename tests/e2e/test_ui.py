@@ -1,12 +1,27 @@
-"""Browser end-to-end checks against a RUNNING server (default http://localhost:8000).
+"""Browser end-to-end checks against a RUNNING server (default http://localhost:8000/check).
 
 Not part of the default `pytest` run (needs Playwright + Chromium + a built frontend).
-Run:  SCOPELOCK_URL=http://localhost:8000 python tests/e2e/test_ui.py
-Exits non-zero if any check fails."""
+Run:  SCOPELOCK_URL=http://localhost:8000/check python tests/e2e/test_ui.py
+Exits non-zero if any check fails.
+"""
 import os, sys
+from pathlib import Path
 from playwright.sync_api import sync_playwright
 
-URL = os.getenv("SCOPELOCK_URL", "http://localhost:8000/")
+DEFAULT_CHECK_URL = os.getenv("SCOPELOCK_URL", "http://localhost:8000/check")
+if not DEFAULT_CHECK_URL.endswith("/check"):
+    if DEFAULT_CHECK_URL.endswith("/"):
+        DEFAULT_CHECK_URL = DEFAULT_CHECK_URL + "check"
+    else:
+        DEFAULT_CHECK_URL = DEFAULT_CHECK_URL + "/check"
+
+BASE_URL = DEFAULT_CHECK_URL.replace("/check", "/")
+if not BASE_URL.endswith("/"):
+    BASE_URL += "/"
+
+SCREENSHOTS_DIR = Path(__file__).resolve().parent.parent.parent / "docs" / "screenshots"
+SCREENSHOTS_DIR.mkdir(parents=True, exist_ok=True)
+
 R: list[tuple[str, bool]] = []
 errors: list[str] = []
 
@@ -19,10 +34,89 @@ def check(name: str, cond, extra: str = ""):
 def main() -> int:
     with sync_playwright() as p:
         b = p.chromium.launch()
+
+        # -------------------------------------------------------------
+        # 1. Landing page checks on /
+        # -------------------------------------------------------------
+        pg_land = b.new_context(viewport={"width": 1280, "height": 900}).new_page()
+        pg_land.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
+        pg_land.on("pageerror", lambda e: errors.append(str(e)))
+        pg_land.goto(BASE_URL)
+        pg_land.wait_for_selector(".hero-h1")
+
+        h1_text = pg_land.inner_text("h1")
+        check("landing h1 contains outgrow their evidence", "outgrow their evidence" in h1_text.lower())
+
+        # Trigger scroll reveal across sections before taking full page screenshot
+        pg_land.evaluate("""async () => {
+            for (let i = 0; i < document.body.scrollHeight; i += 400) {
+                window.scrollTo(0, i);
+                await new Promise(r => setTimeout(r, 30));
+            }
+            window.scrollTo(0, 0);
+            await new Promise(r => setTimeout(r, 150));
+        }""")
+
+        # Screenshot landing desktop full page
+        pg_land.screenshot(path=str(SCREENSHOTS_DIR / "desktop_landing.png"), full_page=True)
+
+        # "Check a claim" navigates to /check and shows .scenarios
+        pg_land.click("text=Check a claim")
+        pg_land.wait_for_selector(".scenarios")
+        check("Check a claim button navigates to /check and shows .scenarios", pg_land.locator(".scenarios").count() > 0)
+
+        # "See a live example" check
+        pg_land.goto(BASE_URL)
+        pg_land.wait_for_selector(".hero-h1")
+        pg_land.click("text=See a live example")
+        pg_land.wait_for_selector(".scenarios")
+        if pg_land.locator(".verdict").count() == 0:
+            pg_land.click("text=Check claim")
+            pg_land.wait_for_selector(".verdict")
+        check("See a live example ends on a verdict", pg_land.locator(".verdict").count() > 0)
+        pg_land.close()
+
+        # -------------------------------------------------------------
+        # 2. Reduced motion check on landing page
+        # -------------------------------------------------------------
+        pg_rm = b.new_context(viewport={"width": 1280, "height": 900}, reduced_motion="reduce").new_page()
+        pg_rm.goto(BASE_URL)
+        pg_rm.wait_for_selector(".hero-h1")
+        pg_rm.wait_for_timeout(300)
+        hidden_elements_count = pg_rm.evaluate(
+            """Array.from(document.querySelectorAll('*')).filter(el => {
+                const s = window.getComputedStyle(el);
+                return s.opacity === '0' && el.offsetWidth > 0 && el.offsetHeight > 0;
+            }).length"""
+        )
+        check("with reduced_motion=reduce no element on / has computed opacity: 0", hidden_elements_count == 0, f"found {hidden_elements_count}")
+        pg_rm.close()
+
+        # -------------------------------------------------------------
+        # 3. Mobile landing screenshot (390x844)
+        # -------------------------------------------------------------
+        pg_mob = b.new_context(viewport={"width": 390, "height": 844}).new_page()
+        pg_mob.goto(BASE_URL)
+        pg_mob.wait_for_selector(".hero-h1")
+        pg_mob.evaluate("""async () => {
+            for (let i = 0; i < document.body.scrollHeight; i += 400) {
+                window.scrollTo(0, i);
+                await new Promise(r => setTimeout(r, 30));
+            }
+            window.scrollTo(0, 0);
+            await new Promise(r => setTimeout(r, 150));
+        }""")
+        pg_mob.wait_for_timeout(300)
+        pg_mob.screenshot(path=str(SCREENSHOTS_DIR / "mobile_landing.png"), full_page=True)
+        pg_mob.close()
+
+        # -------------------------------------------------------------
+        # 4. Checker Page checks (starting at DEFAULT_CHECK_URL)
+        # -------------------------------------------------------------
         pg = b.new_context(viewport={"width": 1280, "height": 900}).new_page()
         pg.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
         pg.on("pageerror", lambda e: errors.append(str(e)))
-        pg.goto(URL)
+        pg.goto(DEFAULT_CHECK_URL)
         pg.wait_for_selector(".scenarios")
 
         # validation
@@ -42,6 +136,16 @@ def main() -> int:
         check("Ctrl+Enter submits; original not approved", pg.inner_text(".verdict h2") == "Not supported by the evidence")
         check("7 dimension findings", pg.locator(".finding").count() == 7)
         check("7 rail buttons", pg.locator(".rail button").count() == 7)
+
+        # Screenshot desktop checker after critical example
+        pg.screenshot(path=str(SCREENSHOTS_DIR / "desktop_checker.png"), full_page=True)
+
+        # /r/<id> reload restores the verdict
+        current_url = pg.url
+        if "/r/" in current_url:
+            pg.reload()
+            pg.wait_for_selector(".verdict")
+            check("/r/<id> of a fresh review restores the verdict after reload", pg.locator(".verdict").count() > 0)
 
         # selection, thread, escape
         pg.focus(".finding:nth-child(2) > button")
@@ -107,7 +211,23 @@ def main() -> int:
         pg.unroute("**/api/reviews")
         real = [e for e in errors if "Failed to load resource" not in e and "ERR_FAILED" not in e]
         check("no unexpected console/page errors", not real, str(real))
+        pg.close()
+
+        # -------------------------------------------------------------
+        # 5. Mobile checker screenshot after critical example run
+        # -------------------------------------------------------------
+        pg_mob_chk = b.new_context(viewport={"width": 390, "height": 844}).new_page()
+        pg_mob_chk.goto(DEFAULT_CHECK_URL)
+        pg_mob_chk.wait_for_selector(".scenarios")
+        pg_mob_chk.click("text=Critical example")
+        pg_mob_chk.click("text=Check claim")
+        pg_mob_chk.wait_for_selector(".verdict")
+        pg_mob_chk.wait_for_timeout(400)
+        pg_mob_chk.screenshot(path=str(SCREENSHOTS_DIR / "mobile_checker.png"), full_page=True)
+        pg_mob_chk.close()
+
         b.close()
+
     print(f"\n{sum(ok for _, ok in R)}/{len(R)} checks passed")
     return 0 if all(ok for _, ok in R) else 1
 
