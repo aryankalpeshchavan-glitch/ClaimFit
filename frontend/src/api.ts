@@ -28,3 +28,4 @@ export const createReview = (claim_text: string, evidence_text: string) =>
   call<Review>("/api/reviews", { method: "POST", body: JSON.stringify({ claim_text, evidence_text }) });
 export const requestRewrite = (id: string, candidate_text?: string) =>
   call<RewriteResult>(`/api/reviews/${id}/rewrite`, { method: "POST", body: JSON.stringify(candidate_text === undefined ? {} : { candidate_text }) });
+export const getReview = (id: string) => call<Review>(`/api/reviews/${id}`, undefined, 10000);
